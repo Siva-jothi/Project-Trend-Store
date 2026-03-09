@@ -1,3 +1,5 @@
+// deploy kubernetes cluster using jenkins pipeline for building docker image and pushing to 
+// dockerhub and then deploying to kubernetes cluster using kubectl apply -f deployment.yaml and service.yaml
 pipeline {
     agent any
 
