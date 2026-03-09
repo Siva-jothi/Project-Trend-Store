@@ -1,6 +1,11 @@
-# create a Jenkins pipeline to build and deploy the application to Kubernetes cluster. The pipeline should include stages for cloning the repository, building the Docker image, pushing it to Docker Hub, and deploying it to the Kubernetes cluster. Use appropriate Jenkins plugins and credentials management for secure handling of Docker Hub credentials.
+# create a Jenkins pipeline to build, push and deploy the application to Kubernetes
 pipeline {
     agent any
+
+    environment {
+        DOCKER_IMAGE = "sivacs2004/project-trend-store"
+        DOCKERHUB_CREDENTIALS = "dockerhub-cred"
+    }
 
     stages {
 
@@ -10,30 +15,31 @@ pipeline {
             }
         }
 
-        stage('Build and Push Docker Image') {
+        stage('Build Docker Image') {
             steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'dockerhub-credentials',
-                    usernameVariable: 'DOCKERHUB_USERNAME',
-                    passwordVariable: 'DOCKERHUB_PASSWORD'
-                )]) {
+                script {
+                    sh 'docker build -t $DOCKER_IMAGE:latest .'
+                }
+            }
+        }
 
-                    sh '''
-                    echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin
-                    docker build -t trend-store:latest .
-                    docker tag trend-store:latest $DOCKERHUB_USERNAME/trend-store:latest
-                    docker push $DOCKERHUB_USERNAME/trend-store:latest
-                    '''
+        stage('Push to DockerHub') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-cred', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+                        sh 'echo $PASS | docker login -u $USER --password-stdin'
+                        sh 'docker push $DOCKER_IMAGE:latest'
+                    }
                 }
             }
         }
 
         stage('Deploy to Kubernetes') {
             steps {
-                sh '''
-                kubectl apply -f k8s-deployment.yaml
-                kubectl apply -f k8s-service.yaml
-                '''
+                script {
+                    sh 'kubectl apply -f deployment.yaml'
+                    sh 'kubectl apply -f service.yaml'
+                }
             }
         }
 
