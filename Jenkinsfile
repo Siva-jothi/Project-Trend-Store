@@ -1,4 +1,4 @@
-# create a Jenkins pipeline to build, push and deploy the application to Kubernetes
+// create a Jenkins pipeline to build, push and deploy the application to Kubernetes
 pipeline {
     agent any
 
