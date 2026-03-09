@@ -1,3 +1,4 @@
+# create a Jenkins pipeline to build and deploy the application to Kubernetes cluster. The pipeline should include stages for cloning the repository, building the Docker image, pushing it to Docker Hub, and deploying it to the Kubernetes cluster. Use appropriate Jenkins plugins and credentials management for secure handling of Docker Hub credentials.
 pipeline {
     agent any
 
