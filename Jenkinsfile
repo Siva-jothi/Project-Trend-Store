@@ -30,10 +30,16 @@ pipeline {
                 }
             }
         }
+        stage('configure EKS'){
+            steps {
+                sh 'aws eks update-kubeconfig --region ap-south-1 --name project-2-cluster'
+            }
+        }
+           
 
         stage('Deploy to Kubernetes') {
             steps {
-                aws eks update-kubeconfig --region ap-south-1 --name project-2-cluster
+                
                 sh 'kubectl apply -f deployment.yaml'
                 sh 'kubectl apply -f service.yaml'
             }
