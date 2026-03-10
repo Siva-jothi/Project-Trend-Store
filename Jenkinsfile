@@ -33,9 +33,7 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                withCredentials([file(credentialsId: 'my-kubeconfig', variable: 'KUBECONFIG')]) {
-                
-                }
+                aws eks update-kubeconfig --region ap-south-1 --name project-2-cluster
                 sh 'kubectl apply -f deployment.yaml'
                 sh 'kubectl apply -f service.yaml'
             }
