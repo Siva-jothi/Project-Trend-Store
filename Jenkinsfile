@@ -4,7 +4,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "sivacs2004/project-trend-store"
+        DOCKER_IMAGE = "sivacs2004/trend-store"
         DOCKERHUB_CREDENTIALS = "dockerhub-cred"
     }
 
@@ -29,13 +29,7 @@ pipeline {
                     sh 'docker push $DOCKER_IMAGE:latest'
                 }
             }
-        }
-        stage('configure EKS'){
-            steps {
-                sh 'aws eks update-kubeconfig --region ap-south-1 --name project-2-cluster'
-            }
-        }
-           
+        }           
 
         stage('Deploy to Kubernetes') {
             steps {
