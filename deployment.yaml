@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: trend-store
-        image: sivacs2004/project-2:latest
+        image: sivacs2004/trend-store:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 80
